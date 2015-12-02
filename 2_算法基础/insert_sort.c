@@ -1,5 +1,5 @@
-// ²åÈëÅÅĞò 
-// °´ÉıĞòÅÅĞò
+// æ’å…¥æ’åº 
+// æŒ‰å‡åºæ’åº
 
 #include <stdio.h>
 
@@ -18,7 +18,7 @@ void showArray(int *data,int len)
 }
 
 //insert sort
-//²åÈëÅÅĞòÊµÏÖ
+//æ’å…¥æ’åºå®ç°
 int insertSort(int *data,int len)
 {
 	int i = 1;
@@ -33,6 +33,7 @@ int insertSort(int *data,int len)
 		}//end for p
 		data[p+1] = key;
 	}//end for i
+	return SUCCESS;
 }
 
 int main()
