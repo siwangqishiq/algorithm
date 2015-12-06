@@ -15,4 +15,6 @@
 //print array data
 void showArray(int *data,int len);
 
+int binarySearch(int *data,int start,int end,int key);
+
 #endif /* defined(__Algorithm__Tool__) */
