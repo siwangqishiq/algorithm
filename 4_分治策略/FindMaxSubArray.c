@@ -8,13 +8,14 @@
 
 void printResult(int *data,int left,int right,int maxSubarray);
 int findMaxSubarray(int *data,int start,int end,int *pLeft,int *pRight);
+int findMaxnumin(int *data,int start,int end,int *pLeft,int *pRight);
 
 int main()
 {
 	int data[]={13,-3,-25,20,-3,-16,-23,18,20,-7,12,-5,-22,15,-4,7};
 	int len = sizeof(data)/sizeof(data[0]);
 	int left = 0,right = 0;
-	int maxSubArray = findMaxSubarray(data,0,len - 1,&left,&right);
+	int maxSubArray = findMaxnumin(data,0,len - 1,&left,&right);
 	
 	printResult(data,left,right,maxSubArray);
 
@@ -23,6 +24,34 @@ int main()
 
 //求得最大子序列  
 //时间复杂度O(N)
+int findMaxnumin(int *data,int start,int end,int *pLeft,int *pRight)
+{
+	int maxValue = MIN_VALUE;
+	int left = start,right = start;
+	int i;
+	int sum = 0;
+	for(i = start; i<= end ;i++)
+	{
+		sum += data[i];
+		if(sum < 0)
+		{
+			sum = 0;
+			left = i;
+			right = i;
+		}
+		else if(sum > maxValue)
+		{
+			maxValue = sum;
+			right = i;
+		}
+	}//end for i
+
+	*pLeft = left;
+	*pRight = right;
+	return maxValue;
+}
+
+
 int findMaxSubarray(int *data,int start,int end,int *pLeft,int *pRight)
 {
 	int maxSubarray = MIN_VALUE;
