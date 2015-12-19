@@ -12,13 +12,14 @@ int main()
 	char *str = "aabcdabcdeabcabc";
 	char *p = "abc";
 	naiveStringMatcher(str,p);
+	
 	return 0;
 }
 
-//ÆÓËØ×Ö·û´®Æ¥ÅäËã·¨
-// param   str ËÑË÷´®
-// param   p Ä£Ê½´®
-// ÏÔÊ¾Æ«ÒÆÖµ
+//æœ´ç´ å­—ç¬¦ä¸²åŒ¹é…ç®—æ³•
+// param   str æœç´¢ä¸²
+// param   p æ¨¡å¼ä¸²
+// æ˜¾ç¤ºåç§»å€¼
 void naiveStringMatcher(const char *str,const char *p)
 {
 	int strLen = strlen(str);
@@ -34,7 +35,7 @@ void naiveStringMatcher(const char *str,const char *p)
 	}//end for i
 }
 
-//¼ìÑéleft right len³¤¶È×Ö·ûÊÇ·ñÏàµÈ
+//æ£€éªŒleft right lené•¿åº¦å­—ç¬¦æ˜¯å¦ç›¸ç­‰
 //
 int stringMatch(const char *left,const char *right,int len)
 {
