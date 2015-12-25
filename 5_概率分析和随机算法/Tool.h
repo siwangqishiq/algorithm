@@ -13,6 +13,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define OK          0
+#define ERROR   -1
+
 //print array data
 void showArray(int *data,int len);
 
