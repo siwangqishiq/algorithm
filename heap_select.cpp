@@ -1,7 +1,9 @@
 #include <iostream>
 #include <random>
 
-class MaxHeap {
+#include "data.h"
+
+class MinHeap {
 public:
 	MaxHeap(int _size) : size(_size){
 		pData = new int[size + 1];
@@ -10,7 +12,7 @@ public:
 		}//end for i
 	}
 	
-	~MaxHeap(){
+	~MinHeap(){
 		delete pData;
 		pData = nullptr;
 	}
@@ -29,12 +31,27 @@ int genRandomInt(int min , int max) {
 	return dis(gen);
 }
 
+std::string genDataCode(int dataCount) {
+	std::string result = "int data[] = { ";
+	for(int i = 0 ; i < dataCount ; i++) {
+		std::string v = std::to_string(genRandomInt(0,100));
+		if(i != 0){
+			result += ", ";
+		}
+		result += v;
+	}//end for i
+	result += "};";
+	return result;
+}
+
 int main(int argc , char *argv[]) {
 		
-	int data[] = {100,200,3,1,8,90,87,99,34,34,87,76,56,55,99,102 , 97, 98,7,73,34};
-	int data_len = sizeof(data) / sizeof(int);
+	for(int i = 0 ; i< data_len;i++){
+		std::cout << data[i] <<std::endl;
+	}
 	
-	std::random_device rd;
+	
+	
 	
 	
 	//cout << "Hello World" << endl;
