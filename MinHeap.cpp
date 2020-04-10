@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "data.h"
+// int data[] = {9,8,2,1,4,7,6,5,3,101,1,10,100,88,77,55,99};
+// int data_len = sizeof(data) / sizeof(data[0]);
 
 //最小堆
 class MinHeap {
@@ -178,7 +180,7 @@ std::vector<int> selectMaxNumbers(int d[] , int d_size , int count) {
 }
 
 int main(int argc , char *argv[]) {
-	std::vector<int> result = selectMaxNumbers(data , data_len , 100);
+	std::vector<int> result = selectMaxNumbers(data , data_len , 20);
 	std::cout << result.size() <<std::endl;
 
 	std::cout << "max number is [";
