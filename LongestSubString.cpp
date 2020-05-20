@@ -33,6 +33,14 @@ void printSubStr(const char *data, int limitLeft , int limitRight){
     std::cout << std::endl;
 }
 
+void printSubStr2(const char *data, int limitLeft , int limitRight){
+    int index = limitLeft;
+    while(index <= limitRight){
+        std::cout << data[index++];
+    }
+    std::cout << std::endl;
+}
+
 void findLongsetSubStringCrossMid(const char *data , int mid , int left , int right , int *pOffsetLeft , int *pOffsetRight){
     std::cout << "mid  = " << mid << " left = " << left << " right = " << right << std::endl;
     std::unordered_set<char> charSet;
@@ -203,7 +211,7 @@ void findLongestSubString(const char *data , int left , int right , int *pOutLef
     }
 }
 
-int lengthOfLongestSubstring(std::string s) {
+int lengthOfLongestSubstring2(std::string s) {
     if(s == "")
         return 0;
     
@@ -218,15 +226,65 @@ int lengthOfLongestSubstring(std::string s) {
     return outputRight - outputLeft;
 }
 
+int lengthOfLongestSubString(std::string s){
+    if(s == "")
+        return 0;
+    
+    const int len = s.length();
+    const char *data = s.c_str();
+
+    int left = 0;
+    int right = 0;
+    std::unordered_set<char> set;
+
+    int maxLength = 0;
+    for(int i = 0 ; i < len ; i++){
+        char c = data[i];
+        right = i;
+        
+        // std::cout << "new elem : " << c << std::endl;
+        // std::cout << "[ ";
+        // for(char ch : set){
+        //     std::cout << ch << " ";
+        // }
+        // std::cout << " ]" << std::endl;
+        if(set.find(c) == set.end()){ //当前字符不在已有集合中
+            set.insert(c);
+        }else { //当前字符已存在
+            //adjust
+            for(int j = left; j < right ;j++){
+                char checkChar = data[j];
+                //std::cout << "check char = " << checkChar << std::endl;
+                if(checkChar == c){
+                    left = j + 1;
+                    break;
+                }else{
+                    //std:: cout << "remove elem : " << checkChar << std::endl;
+                    set.erase(checkChar);
+                }
+            }//end for j
+        }
+
+        printSubStr2(data , left , right);
+        if(maxLength < right - left + 1){
+            maxLength = right - left + 1;
+        }
+    }//end for i
+
+    return maxLength;
+}
+
 int main(int argc , char *argv[]) {    
     //  bziuwnklhqzrxnb   => iuwnklhqzrx
 
     //bpfbhmipx => fbhmipx
-    // std::string str = "bziuwnklhqzrxnb";
+    std::string str = "bziuwnklhqzrxnb";
     // std::string str = "bpfbhmipx"; 
     // std::string str = "abcabcbb";
-    std::string str = "loddktdji"; //ktdji
-    int r = lengthOfLongestSubstring(str);
+    // std::string str = "loddktdji"; //ktdji
+    // std::string str="AAA";
+    // std::string str = "a";
+    int r = lengthOfLongestSubString(str);
     std::cout << r << std::endl;
 
     //findLongsetSubStringCrossMid(str.c_str() , 4 , 0 , 9);
