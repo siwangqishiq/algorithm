@@ -32,6 +32,7 @@ using namespace std;
 class Solution {
 public:
     double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+
         return 0;
     }
 };
@@ -68,17 +69,26 @@ double simpleFindMedian(vector<int> &nums1 , vector<int> &nums2){
     }
     cout << "]" << endl;
 
-    if(mergeVec.size() % 2 == 0){
+    if(mergeVec.size() == 0){
+        return 0;
+    }else if(mergeVec.size() == 1){
+        return mergeVec[0];
+    }else if(mergeVec.size() % 2 == 0){
+        int midA = mergeVec.size() / 2;
+        int midB = midA - 1;
         
+        double median = ((double)mergeVec[midB] + (double)mergeVec[midA]) / 2;
+        return median;
     }else{
-
+        int mid = mergeVec.size() / 2;
+        return mergeVec[mid];
     }
     return 0;
 }
 
 int main(){
     vector<int> nums1={1,3,5 , 9};
-    vector<int> nums2 = {2,4,6,7 ,8};
+    vector<int> nums2 = {2,4,6,7 ,8 , 20};
     double r = simpleFindMedian(nums1 , nums2);
     cout << r << endl;
     return 0;
