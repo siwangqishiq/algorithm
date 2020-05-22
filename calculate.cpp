@@ -52,11 +52,11 @@ void parseExpr(string s){
 }
 
 enum SYMBOL_TYPE{
-    SYMBOL_ADD  = 1, 
-    SYMBOL_SUB = 2,
-    SYMBOL_VALUE = 3, 
-    SYMBOL_LT = 4,
-    SYMBOL_RT = 5
+    SYMBOL_VALUE = 1,
+    SYMBOL_ADD, 
+    SYMBOL_SUB,
+    SYMBOL_LT,
+    SYMBOL_RT
 };
 
 const int STATE_NORMAL = 1;
@@ -108,6 +108,7 @@ int parseInputSymbols(string input , vector<Symbol> &symbols){
                     symbols.push_back(symbol);
                 }
                 break;
+            
             case '(':
                 //state = STATE_NORMAL;
                 if(state == STATE_READ_VALUE){
@@ -151,7 +152,13 @@ int parseInputSymbols(string input , vector<Symbol> &symbols){
                 }
                 break;
             default:
-                return -1;
+                if(state == STATE_NORMAL){
+                    state = STATE_READ_VALUE;
+                    readStrContent = string(1 , c);
+                }else if(state == STATE_READ_VALUE){
+                   readStrContent += string(1 , c);                     
+                }
+                break;
         }//end switch
 
         index++;
@@ -178,82 +185,70 @@ void parseToPostfix(vector<Symbol> &symbols) {
     vector<Symbol *> postfixResult;
     stack<Symbol *> helpStack;
 
-    for(int i = 0 , len = symbols.size() ; i < len ; i++){
+    for(int i = 0 ; i < symbols.size();i++){
         Symbol &symbol = symbols[i];
-        SYMBOL_TYPE type = symbol.type;
 
-        //cout << symbol.value << endl;
-        switch(type){
-            case SYMBOL_ADD:   //  +
-            case SYMBOL_SUB:  // -
-                //出栈一个元素
-                if(!helpStack.empty() && helpStack.top()->type != SYMBOL_LT){
-                    cout << "add elem1111 : " << helpStack.top()->value << endl;
+        switch(symbol.type){
+            case SYMBOL_ADD:// + - 运算符
+            case SYMBOL_SUB:
+            // case SYMBOL_MUL:
+            // case SYMBOL_DIV:
+                helpStack.push(&symbol);
+                break;
+            case SYMBOL_LT: // (左边括号
+                helpStack.push(&symbol);
+                break;
+            case SYMBOL_RT:
+                while(!helpStack.empty() && helpStack.top()->type != SYMBOL_LT){
                     postfixResult.push_back(helpStack.top());
                     helpStack.pop();
                 }
 
-                // while(!helpStack.empty() && helpStack.top()->type != SYMBOL_LT){
-                //     cout << "add elem1111 : " << helpStack.top()->value << endl;
-                //     postfixResult.push_back(helpStack.top());
-                //     helpStack.pop();
-                // }
-                //入栈
-                helpStack.push(&symbol);
+                if(helpStack.top()->type == SYMBOL_LT){
+                    helpStack.pop();
+                }
                 break;
             case SYMBOL_VALUE:
-                helpStack.push(&symbol);
-                break;
-            case SYMBOL_LT: //左括号  (  入栈
-                helpStack.push(&symbol);
-                break;
-            case SYMBOL_RT: //右括号 ) 出栈
-                //出栈直到发现第一个左括号
-                while(!helpStack.empty()){
-                    Symbol *p = helpStack.top();
-                    cout << "stackTop : " << p->value << endl; 
-
-                    if(p->type == SYMBOL_LT){
-                        cout << "removed" << endl;
-                        helpStack.pop();
-                        break;
-                    }
-
-                    cout << "add elem222 : " << helpStack.top()->value << endl;
-                    postfixResult.push_back(helpStack.top());
-                    helpStack.pop();
-                }//end while
+                postfixResult.push_back(&symbol);
                 break;
             default:
                 break;
         }//end switch
-
-        cout << "index = " << i << " \t";
-        for(Symbol *pSymbol : postfixResult){
-            cout << pSymbol->value << " ";
-        }//end for each
-        cout << endl;
     }//end for i
 
-    // cout<<"stack size = " << helpStack.size() << endl;
     while(!helpStack.empty()){
         postfixResult.push_back(helpStack.top());
         helpStack.pop();
     }//end while
 
-    for(Symbol *pSymbol : postfixResult){
-        cout << pSymbol->value << " ";
-    }//end for each
+    
+    cout << "postfix : ";
+    for(int i = 0 ; i < postfixResult.size();i++){
+        Symbol *&p = postfixResult[i];
+        cout << p->value << " ";
+    }//end for i
     cout << endl;
+}
+
+//后缀表达式求值
+int calculatePostfixExp(){
+    // a * b + c
+
+    // abc+*
+
+    
+    return 0;
 }
 
 int main() {
 
     vector<Symbol> symbols;
     // string input = "1 + (2 -3 ) + 4 ";
-
-    string input = "((1+2) +3) + (4 +5)";
+    string input = "(1+2)-3-(1+2)+4";
+    // string input = "((1+2) +3) + (4 +5)";
     // string input = "5 + (4 + ((1 + 2) + 3))";
+    // string input = " 1+ 2 -3";
+    // string input = "(a+b)*c-(a+b)/e";
     int r = parseInputSymbols(input , symbols);
     std::cout << "result = " << r << std::endl;
     std::cout << input << std::endl;
