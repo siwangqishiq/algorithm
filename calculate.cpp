@@ -187,12 +187,17 @@ void parseToPostfix(vector<Symbol> &symbols) {
             case SYMBOL_ADD:   //  +
             case SYMBOL_SUB:  // -
                 //出栈一个元素
-
-                if(!helpStack.empty()){
+                if(!helpStack.empty() && helpStack.top()->type != SYMBOL_LT){
+                    cout << "add elem1111 : " << helpStack.top()->value << endl;
                     postfixResult.push_back(helpStack.top());
                     helpStack.pop();
                 }
-                
+
+                // while(!helpStack.empty() && helpStack.top()->type != SYMBOL_LT){
+                //     cout << "add elem1111 : " << helpStack.top()->value << endl;
+                //     postfixResult.push_back(helpStack.top());
+                //     helpStack.pop();
+                // }
                 //入栈
                 helpStack.push(&symbol);
                 break;
@@ -214,6 +219,7 @@ void parseToPostfix(vector<Symbol> &symbols) {
                         break;
                     }
 
+                    cout << "add elem222 : " << helpStack.top()->value << endl;
                     postfixResult.push_back(helpStack.top());
                     helpStack.pop();
                 }//end while
@@ -244,10 +250,10 @@ void parseToPostfix(vector<Symbol> &symbols) {
 int main() {
 
     vector<Symbol> symbols;
-    //string input = "100 + (  345 -7 ) -19 + (1    + 2) ";
+    // string input = "1 + (2 -3 ) + 4 ";
 
-    //string input = "((1+2) +3) + (4 +5)";
-    string input = "((1 + 2) + 3)";
+    string input = "((1+2) +3) + (4 +5)";
+    // string input = "5 + (4 + ((1 + 2) + 3))";
     int r = parseInputSymbols(input , symbols);
     std::cout << "result = " << r << std::endl;
     std::cout << input << std::endl;
