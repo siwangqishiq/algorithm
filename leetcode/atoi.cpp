@@ -1,157 +1,214 @@
+/**
+ * 
+ * 请你来实现一个 atoi 函数，使其能将字符串转换成整数。
+
+首先，该函数会根据需要丢弃无用的开头空格字符，直到寻找到第一个非空格的字符为止。接下来的转化规则如下：
+
+如果第一个非空字符为正或者负号时，则将该符号与之后面尽可能多的连续数字字符组合起来，形成一个有符号整数。
+假如第一个非空字符是数字，则直接将其与之后连续的数字字符组合起来，形成一个整数。
+该字符串在有效的整数部分之后也可能会存在多余的字符，那么这些字符可以被忽略，它们对函数不应该造成影响。
+注意：假如该字符串中的第一个非空格字符不是一个有效整数字符、字符串为空或字符串仅包含空白字符时，则你的函数不需要进行转换，即无法进行有效转换。
+
+在任何情况下，若函数不能进行有效的转换时，请返回 0 。
+
+提示：
+
+本题中的空白字符只包括空格字符 ' ' 。
+假设我们的环境只能存储 32 位大小的有符号整数，那么其数值范围为 [−231,  231 − 1]。如果数值超过这个范围，请返回  INT_MAX (231 − 1) 或 INT_MIN (−231) 。
+ 
+
+示例 1:
+
+输入: "42"
+输出: 42
+示例 2:
+
+输入: "   -42"
+输出: -42
+解释: 第一个非空白字符为 '-', 它是一个负号。
+     我们尽可能将负号与后面所有连续出现的数字组合起来，最后得到 -42 。
+示例 3:
+
+输入: "4193 with words"
+输出: 4193
+解释: 转换截止于数字 '3' ，因为它的下一个字符不为数字。
+示例 4:
+
+输入: "words and 987"
+输出: 0
+解释: 第一个非空字符是 'w', 但它不是数字或正、负号。
+     因此无法执行有效的转换。
+示例 5:
+
+输入: "-91283472332"
+输出: -2147483648
+解释: 数字 "-91283472332" 超过 32 位有符号整数范围。 
+     因此返回 INT_MIN (−231) 。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/string-to-integer-atoi
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+ * 
+*/
+
 #include <iostream>
-#include <vector>
 #include <climits>
+#include <string>
+#include <vector>
 
+using namespace std;
 
-enum Status{
-    INIT,//
-    READ_NUMCHAR,
-};
+const int STATUS_IDLE =1;
+const int STATUS_EAT_NUMBER =2;
 
-int converCharToInt(char c){
-    int ret = 0;
-    switch(c){
-        case '1':
-            ret = 1;
-            break;
-        case '2':
-            ret = 2;
-            break;
-        case '3':
-            ret = 3;
-            break;
-        case '4':
-            ret = 4;
-            break;
-        case '5':
-            ret = 5;
-            break;
-        case '6':
-            ret = 6;
-            break;
-        case '7':
-            ret = 7;
-            break;
-        case '8':
-            ret = 8;
-            break;
-        case '9':
-            ret = 9;
-            break;
-        default:
-            break;
-    }//end switch
-    return ret;
-}
+int myAtoi(std::string s) {
+    if(s.empty())
+        return 0;
 
-int atoi(const char *pStr) {
+    const char *p = s.c_str();
 
-    long result = 0;
-    char *p = (char *)pStr;
-    Status state = INIT;
+    int status = STATUS_IDLE;
     int flag = 1;
-    int val = 0;
-    std::vector<int> charNumbers;
-    bool isContiue = true;
+
+    bool endRead = false;
+    vector<int> values;
 
     while(*p != '\0'){
-        char c = *p;
-        //std::cout << c << " ";
-
-        val = converCharToInt(c);
-        switch(*p){
-        case ' ':
-            break;
-        case '-':
-        case '+':
-            if(state == INIT){
-                flag = (c == '-')?-1:1;
-            }
-            break;
-        
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-            if(state == INIT){
-                state = READ_NUMCHAR;
-            }
-             charNumbers.push_back(val);
-            break;
-        case '0':
-            if(state == INIT){
-                isContiue = false;
-            }else if(state == READ_NUMCHAR){
-                 charNumbers.push_back(val);
-            }
-            break;
-
-        default:
-            isContiue = false;
+        char ch = *p;
+        switch(ch){
+            case ' ':
+                if(status == STATUS_EAT_NUMBER){
+                    endRead = true;
+                }
+                break;
+            case '-':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                    flag = -1;
+                }else {
+                    endRead = true;
+                }
+                break;
+            case '+':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                    flag = 1;
+                }else {
+                    endRead = true;
+                }
+                break;
+            case '0':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                }
+                values.push_back(0);
+                break;
+            case '1':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                }
+                values.push_back(1);
+                break;
+            case '2':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                }
+                values.push_back(2);
+                break;
+            case '3':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                }
+                values.push_back(3);
+                break;
+            case '4':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                }
+                values.push_back(4);
+                break;
+            case '5':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                }
+                values.push_back(5);
+                break;
+            case '6':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                }
+                values.push_back(6);
+                break;
+            case '7':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                }
+                values.push_back(7);
+                break;
+            case '8':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                }
+                values.push_back(8);
+                break;
+             case '9':
+                if(status == STATUS_IDLE){
+                    status = STATUS_EAT_NUMBER;
+                }
+                values.push_back(9);
+                break;
+            default:
+                endRead = true;
             break;
         }//end switch
 
-        if(!isContiue){
+        if(endRead)
             break;
-        }
         p++;
     }//end while
+
     
-    if(charNumbers.size() == 0){
-        return result;
+    if(values.empty()){
+        return 0;
     }
-    
-    //std::vector<int> weights;
-    int weight = 1;
-    for(int i = charNumbers.size() - 1 ; i >= 0 ; i--){
-        // std::cout << " i = " << i << "  , " << charNumbers[i] << std::endl; 
-        result += (charNumbers[i] * weight);
-        if(result >= INT_MAX){
-            result = INT_MAX;
-            break;
-        }else if(flag == -1 && -1 * result <= INT_MIN){
-            result = INT_MIN;
-            break;
+
+    long long result = 0;
+    for(int i = 0 ; i < values.size() ;i++){
+        cout << values[i] << " ";
+        
+        //long long priorValue = result;
+
+        result *= 10;
+        result += values[i];
+
+        cout << "result = " << result << endl;
+
+        if(flag > 0){
+            if(result > INT32_MAX)
+                return INT32_MAX;
+        }else{
+            if(-result < INT32_MIN)
+                return INT32_MIN;
         }
-
-        weight *= 10;
+        
     }//end for i
-
-    result = result * flag;
-
-    return result;
+    cout << endl;
+    return flag * result;
 }
 
+int main(){
+    // cout << "INT32_MIN : " << INT32_MIN << endl;
 
-int main(int argc , char **argv){
-    int a1 = atoi("Hello World!!!!!");
-    std::cout << a1 << std::endl;
+    // cout << myAtoi("42") << endl;
+    // cout << myAtoi("    -42") << endl;
 
-    int a2 = atoi(" +12345");
-    std::cout << a2 << std::endl;
+    // cout << myAtoi("4193 with words") << endl;
+    // cout << myAtoi("words and 987") << endl;
 
-    int a3 = atoi(" 45678 ");
-    std::cout << a3 << std::endl;
+    //cout << myAtoi("-91283472332") << endl;
+    cout << myAtoi("00000-42a1234") << endl;
 
-    int a4 = atoi("045678 ");
-    std::cout << a4 << std::endl;
-
-    int a5 = atoi("456aab!78 ");
-    std::cout << a5 << std::endl;
-
-    int a6 = atoi("9999999999999999999999999999999999");
-    std::cout << a6 << std::endl;
-
-    int a7 = atoi("-9999999999999999999999999999999999");
-    std::cout << a7 << std::endl;
-
-    int a8 = atoi(" -12345");
-    std::cout << a8 << std::endl;
-
+    //"   +0 123"
+    cout << myAtoi("   +0 123") << endl;
     return 0;
 }
